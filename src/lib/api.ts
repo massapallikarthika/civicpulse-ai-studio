@@ -3,6 +3,20 @@
  * Automatically injects the Supabase JWT Bearer token into all requests
  */
 
+const RAW_API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim();
+export const API_BASE_URL = RAW_API_BASE_URL ? RAW_API_BASE_URL.replace(/\/+$/, '') : '';
+
+export function getApiUrl(endpoint: string): string {
+  if (!API_BASE_URL) {
+    return endpoint;
+  }
+  if (/^https?:\/\//i.test(endpoint)) {
+    return endpoint;
+  }
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  return `${API_BASE_URL}${cleanEndpoint}`;
+}
+
 const TOKEN_KEY = 'civicpulse_auth_token';
 
 let memoryToken: string | null =
@@ -47,8 +61,9 @@ export function getAuthHeaders(): HeadersInit {
 
 export async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const headers = getAuthHeaders();
+  const targetUrl = getApiUrl(endpoint);
 
-  const response = await fetch(endpoint, {
+  const response = await fetch(targetUrl, {
     ...options,
     headers: {
       ...headers,
