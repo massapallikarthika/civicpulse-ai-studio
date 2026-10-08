@@ -1,0 +1,6 @@
+{
+  "name": "CivicPulse",
+  "description": "AI-Powered Local Government Resource Dashboard for municipal officers to manage wards, complaints, projects, services, financial resources, and operational AI insights.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
